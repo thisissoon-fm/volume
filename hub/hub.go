@@ -13,7 +13,7 @@ import (
 // Event hub clients
 var (
 	clientsLock sync.Mutex
-	clients     = make([]ReadWriter, 0)
+	clients     = make([]Client, 0)
 )
 
 // Orchestration
@@ -47,14 +47,14 @@ type (
 
 // Event Handler Interface
 type Handler interface {
-	Handle(event.Event, ReadWriter) error
+	Handle(event.Event, Client) error
 }
 
 // Handler Func (similar to http.HandlerFunc)
-type HandlerFunc func(event.Event, ReadWriter) error
+type HandlerFunc func(event.Event, Client) error
 
 // Implements the Handler interface
-func (f HandlerFunc) Handle(e event.Event, c ReadWriter) error {
+func (f HandlerFunc) Handle(e event.Event, c Client) error {
 	return f(e, c)
 }
 
@@ -69,7 +69,7 @@ var handlers = map[event.Topic]Handler{
 // client if required
 type message struct {
 	Event  event.Event
-	Client ReadWriter
+	Client Client
 }
 
 // Consumes events from the event channel and
@@ -89,7 +89,7 @@ func handler() {
 
 // Reads from a Reader and places decoded events onto the
 // hub message channel
-func read(client ReadWriter) {
+func read(client Client) {
 	defer Remove(client)
 	// Read messages from the client and place them on the hub message
 	// channel for handling
@@ -116,17 +116,17 @@ func read(client ReadWriter) {
 
 // Add a new client to the hub, this will spawn a new reader
 // which consumes events from the client
-func Add(rw ReadWriter) {
+func Add(c Client) {
 	// Add to clients list
 	clientsLock.Lock()
-	clients = append(clients, rw)
+	clients = append(clients)
 	clientsLock.Unlock()
 	// Spawn read goroutine
-	go read(rw)
+	go read(c)
 }
 
 // Removes a client from the clients list
-func Remove(client ReadWriter) {
+func Remove(client Client) {
 	clientsLock.Lock()
 	for i := range clients {
 		if reflect.DeepEqual(clients[i], client) {
@@ -142,7 +142,7 @@ func Remove(client ReadWriter) {
 // occurs the client is removed from the clients list and the error logged
 func Broadcast(msg []byte) {
 	clientsLock.Lock()
-	cl := make([]ReadWriter, len(clients))
+	cl := make([]Client, len(clients))
 	copy(cl, clients)
 	clientsLock.Unlock()
 	for i := range cl {

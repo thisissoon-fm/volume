@@ -7,6 +7,7 @@ import (
 
 	"volume/event"
 	"volume/log"
+	"volume/volume"
 )
 
 // Handles a increase volume event
@@ -18,7 +19,8 @@ func increaseVolHandler(e event.Event, c Client) error {
 		return err
 	}
 	log.WithField("level", payload.Level).Debug("increase volume")
-	// TODO: change volume level
+	// Set volume level
+	volume.SetVolume(payload.Level)
 	// Encode increased event payload
 	var buff = new(bytes.Buffer)
 	encoder := event.NewEncoder(buff)
@@ -34,8 +36,8 @@ func increaseVolHandler(e event.Event, c Client) error {
 	if err != nil {
 		return err
 	}
-	if _, err := rw.Write(data); err != nil {
-		defer Remove(rw)
+	if _, err := c.Write(data); err != nil {
+		defer Remove(c)
 	}
 	return nil
 }
@@ -49,7 +51,8 @@ func decreaseVolHandler(e event.Event, c Client) error {
 		return err
 	}
 	log.WithField("level", payload.Level).Debug("decrease volume")
-	// TODO: change volume level
+	// Set volume level
+	volume.SetVolume(payload.Level)
 	// Encode increased event payload
 	var buff = new(bytes.Buffer)
 	encoder := event.NewEncoder(buff)
@@ -66,7 +69,7 @@ func decreaseVolHandler(e event.Event, c Client) error {
 		return err
 	}
 	if _, err := c.Write(data); err != nil {
-		defer Remove(rw)
+		defer Remove(c)
 	}
 	return nil
 }
