@@ -85,6 +85,8 @@ func (c *Client) headers() http.Header {
 	// TODO: live in config?
 	topics := []string{
 		"volume:update",
+		"volume:mute",
+		"volume:unmute",
 	}
 	headers.Add("Topics", strings.Join(topics, ","))
 	return headers
