@@ -17,12 +17,8 @@ func (a *App) Run() error {
 	log.Info("app start")
 	defer log.Info("app exit")
 	// Load Volume
-	volume.Load()
-	defer func() {
-		if err := volume.Save(); err != nil {
-			log.WithError(err).Error("error writting volume")
-		}
-	}()
+	volume.LoadState()
+	defer volume.SaveSate()
 	// Start websocket client
 	ws := websocket.New(websocket.Config{})
 	go ws.Connect()
