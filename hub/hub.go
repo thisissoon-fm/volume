@@ -61,6 +61,8 @@ func (f HandlerFunc) Handle(e event.Event, c Client) error {
 // Supported event topics mapped to their handlers
 var handlers = map[event.Topic]Handler{
 	event.VolumeUpdateTopic: HandlerFunc(updateVolumeHandler),
+	event.VolumeMuteTopic:   HandlerFunc(muteHandler),
+	event.VolumeUnmuteTopic: HandlerFunc(unmuteHandler),
 }
 
 // Events are stored witht their message payloads and the client
