@@ -10,10 +10,8 @@ type Topic string
 
 // Supported Topic Names
 var (
-	VolumeIncreaseTopic  = Topic("volume:increase")
-	VolumeDecreaseTopic  = Topic("volume:decrease")
-	VolumeIncreasedTopic = Topic("volume:increased")
-	VolumeDecreasedTopic = Topic("volume:decreased")
+	VolumeUpdateTopic  = Topic("volume:update")
+	VolumeUpdatedTopic = Topic("volume:updated")
 )
 
 // SFM 2.0 Event JSON structure

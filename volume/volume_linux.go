@@ -8,6 +8,7 @@ import "C"
 import (
 	"math"
 	"unsafe"
+	"volume/log"
 )
 
 // Initialise Config
@@ -20,6 +21,7 @@ func SetVolume(level int) {
 	max := config.Max()
 	min := config.Min()
 	volume := int(math.Floor((float64(level)*((max-min)/100) + min) + .5))
+	log.WithField("level", volume).Debug("set volume level on linux")
 	C.setVolume(card, C.int(volume), mixer)
 	C.free(unsafe.Pointer(card))
 }
