@@ -84,8 +84,7 @@ func (c *Client) headers() http.Header {
 	// Topics we want to subscribe too
 	// TODO: live in config?
 	topics := []string{
-		"volume:increase",
-		"volume:decrease",
+		"volume:update",
 	}
 	headers.Add("Topics", strings.Join(topics, ","))
 	return headers
