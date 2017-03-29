@@ -7,6 +7,7 @@ import (
 
 	"volume/ipc/websocket"
 	"volume/log"
+	"volume/volume"
 )
 
 type App struct {
@@ -15,6 +16,13 @@ type App struct {
 func (a *App) Run() error {
 	log.Info("app start")
 	defer log.Info("app exit")
+	// Load Volume
+	volume.Load()
+	defer func() {
+		if err := volume.Save(); err != nil {
+			log.WithError(err).Error("error writting volume")
+		}
+	}()
 	// Start websocket client
 	ws := websocket.New(websocket.Config{})
 	go ws.Connect()

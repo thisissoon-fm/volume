@@ -19,11 +19,12 @@ import "C"
 import "volume/log"
 
 // Sets the volume level
-func SetVolume(level int) {
+func SetVolume(level uint8) {
 	if level > 100 {
 		level = 100
 	}
 	flevel := (float32(level) / 100)
-	log.WithField("level", flevel).Debug("set volume level on darwin")
+	log.WithField("level", flevel).Debug("set volume level")
 	C.setVolume(C.float(flevel))
+	setCurrent(level)
 }
