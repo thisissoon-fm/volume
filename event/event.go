@@ -12,6 +12,10 @@ type Topic string
 var (
 	VolumeUpdateTopic  = Topic("volume:update")
 	VolumeUpdatedTopic = Topic("volume:updated")
+	VolumeMuteTopic    = Topic("volume:mute")
+	VolumeMutedTopic   = Topic("volume:muted")
+	VolumeUnmuteTopic  = Topic("volume:unmute")
+	VolumeUnmutedTopic = Topic("volume:unmuted")
 )
 
 // SFM 2.0 Event JSON structure
@@ -23,5 +27,5 @@ type Event struct {
 
 // All volume events will use this common payload
 type VolumeLevelPayload struct {
-	Level int `json:"level"`
+	Level uint8 `json:"level"`
 }
