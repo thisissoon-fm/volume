@@ -20,18 +20,19 @@ var (
 	current     uint8 = 30 // Default value set on start if not loaded
 )
 
-// Sets the current volume level
-func setCurrent(level uint8) {
-	currentLock.Lock()
-	current = level
-	currentLock.Unlock()
-}
-
 // Returns current volume level
 func Current() uint8 {
 	currentLock.Lock()
 	defer currentLock.Unlock()
 	return current
+}
+
+// Sets the volume level and saves the level
+func SetVolume(level uint8) {
+	currentLock.Lock()
+	setVolume(level) // OS specific function call
+	current = level
+	currentLock.Unlock()
 }
 
 // Saves the current volume to a temporary file for persistence

@@ -15,7 +15,7 @@ import (
 var config = Config{}
 
 // Set volume level for device via ALSA
-func SetVolume(level uint8) {
+func setVolume(level uint8) {
 	card := C.CString(config.Card())
 	mixer := C.CString(config.Mixer())
 	max := config.Max()
@@ -24,5 +24,4 @@ func SetVolume(level uint8) {
 	log.WithField("level", volume).Debug("set volume level")
 	C.setVolume(card, C.int(volume), mixer)
 	C.free(unsafe.Pointer(card))
-	setCurrent(level)
 }
