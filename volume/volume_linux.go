@@ -2,7 +2,7 @@ package volume
 
 // #cgo LDFLAGS: -lasound -lstdc++
 // #include <stdlib.h>
-// #include "volume.h"
+// #include "volume_linux.h"
 import "C"
 
 import (

@@ -7,10 +7,11 @@ GOOS 			?=
 GOARCH 			?=
 TIME 			?= $(shell date +%s)
 VERSION 		?= $(shell git rev-parse HEAD)
-CGO_ENABLED 	?= 0
+CGO_ENABLED 	?= 1
 CGO_CFLAGS 		?= ""
 CGO_LDFLAGS 	?= ""
 LDFLAGS 		?= ""
+CC 				?= ""
 
 .PHONY: linux darwin
 
@@ -34,6 +35,7 @@ linux: linux64
 
 # Build Darwin
 darwin%: GOOS = darwin
+darwin%: CC = clang
 darwin: darwin64
 
 # 64bit Archetecture
@@ -45,11 +47,12 @@ arm: CGO_ENABLED=1
 
 # Common Build Target
 arm linux64 darwin64:
+	CC=$(CC) \
 	GOOS=$(GOOS) \
 	GOARCH=$(GOARCH) \
 	CGO_ENABLED=$(CGO_ENABLED) \
-	CGO_LDFLAGS="$(CGO_LDFLAGS)" \
-	CGO_CFLAGS="$(CGO_CFLAGS)" \
+	CGO_LDFLAGS=$(CGO_LDFLAGS) \
+	CGO_CFLAGS=$(CGO_CFLAGS) \
 	go build -v \
 		-ldflags "-X volume/build.timestamp=$(TIME) -X volume/build.version=$(VERSION) -X volume/build.arch=$(GOARCH) -X volume/build.os=$(GOOS)" \
 		-o "$(GOOUTDIR)/sfmvolume.$(GOOS)-$(GOARCH)"

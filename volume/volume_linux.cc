@@ -4,7 +4,7 @@
 #include <stdlib.h>
 
 extern "C" {
-#include "volume.h"
+#include "volume_linux.h"
 }
 
 snd_mixer_elem_t *getElement(snd_mixer_t *handle, const char *card, const char *mixer) {
