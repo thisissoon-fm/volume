@@ -70,7 +70,11 @@ type Client struct {
 
 // Constructs the connection url
 func (c *Client) url() string {
-	u := url.URL{Scheme: "ws", Host: c.Config.Host(), Path: "/"}
+	u := url.URL{
+		Scheme: c.Config.Scheme(),
+		Host:   c.Config.Host(),
+		Path:   c.Config.Path(),
+	}
 	return u.String()
 }
 
